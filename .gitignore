@@ -1,0 +1,7 @@
+.idea
+
+volumes/db/*
+volumes/logs/*
+
+!volumes/db/.gitkeep
+!volumes/logs/.gitkeep
