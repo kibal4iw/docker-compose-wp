@@ -97,7 +97,7 @@ RUN { \
 		echo 'display_errors = Off'; \
 		echo 'display_startup_errors = Off'; \
 		echo 'log_errors = On'; \
-		echo 'error_log = /dev/stderr'; \
+		echo 'error_log = /var/log'; \
 		echo 'log_errors_max_len = 1024'; \
 		echo 'ignore_repeated_errors = On'; \
 		echo 'ignore_repeated_source = Off'; \
