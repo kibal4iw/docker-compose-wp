@@ -2,52 +2,48 @@ version: '3'
 
 services:
   db:
-    build: ./docker/db/mariadb
+    build: ./docker/configs/db/mariadb
     environment:
       MYSQL_ROOT_PASSWORD: 123456
       MYSQL_DATABASE: local_db
       MYSQL_USER: local_db
       MYSQL_PASSWORD: 123456
     volumes:
-      - ./volumes/db:/var/lib/mysql
-    restart: always
+      - ./docker/volumes/db:/var/lib/mysql
+    # restart: always
+    container_name: proj-db
 
-  web:
-    build: ./docker/web/7.4
+  php:
+    build: ./docker/configs/php/7.4
     volumes:
-      - ./web/:/var/www/html/
+      - ./:/var/www/html/
     working_dir: /var/www/html/
     depends_on:
       - db
     links:
       - db
-    restart: always
+    container_name: proj-php
 
   nginx:
     image: nginx:latest
     volumes:
-      - ./docker/nginx:/etc/nginx/conf.d
-      - ./web/:/var/www/html
+      - ./docker/configs/nginx:/etc/nginx/conf.d
+      - ./:/var/www/html
     ports:
       - 8080:80
     links:
-      - web
+      - php
     environment:
-      - NGINX_HOST=localpontyk
+      - NGINX_HOST=localhost
       - NGINX_PORT=80
-
-#  adminer:
-#    image: adminer
-#    restart: always
-#    ports:
-#      - 8081:8080
+    container_name: proj-nginx
 
   pma:
-   image: phpmyadmin/phpmyadmin
-   restart: always
-   links:
-     - mysql:db
-   ports:
-     - 8082:80
-   environment:
-     MYSQL_ROOT_PASSWORD: 123456
+    image: phpmyadmin/phpmyadmin
+    links:
+      - db
+    ports:
+      - 8081:80
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+    container_name: proj-pma
