@@ -90,3 +90,49 @@ docker-compose down
 ```
 docker-compose down -v
 ```
+
+### PHP
+
+В папке docker/configs/php есть несолько версий php.
+- 7.4-apache
+- 7.4-fpm
+
+Если вам нужен nginx, то он работает в связке с 7.4-fpm
+
+Если нужен просто apache, то использовать 7.4-apache. Заменить в docker-compose.yml
+
+```
+php:
+    build: ./docker/configs/php/7.4-fpm
+    volumes:
+      - ./:/var/www/html/
+    working_dir: /var/www/html/
+    depends_on:
+      - db
+    links:
+      - db
+    container_name: proj-php
+    networks:
+      - proj-network
+```
+
+на
+
+```
+php:
+    build: ./docker/configs/php/7.4-apache
+    volumes:
+      - ./:/var/www/html/
+    working_dir: /var/www/html/
+    depends_on:
+      - db
+    links:
+      - db
+    container_name: proj-php
+    networks:
+      - proj-network
+    ports:
+      - 8080:80
+```
+
+и удалить секцию с nginx
